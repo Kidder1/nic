@@ -34,7 +34,7 @@ pip install nic-cli
 当前发布地址：
 
 - PyPI：https://pypi.org/project/nic-cli/
-- GitHub Release：https://github.com/Kidder1/nic/releases/tag/v0.1.3
+- GitHub Release：https://github.com/Kidder1/nic/releases/tag/v0.1.4
 
 ## 用法
 

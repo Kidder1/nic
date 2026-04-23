@@ -34,7 +34,7 @@ If `pip` is not on your PATH, use `python -m pip install nic-cli` or `python3 -m
 Current release:
 
 - PyPI: https://pypi.org/project/nic-cli/
-- GitHub Release: https://github.com/Kidder1/nic/releases/tag/v0.1.3
+- GitHub Release: https://github.com/Kidder1/nic/releases/tag/v0.1.4
 
 ## Usage
 

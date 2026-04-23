@@ -6,6 +6,12 @@ The format is inspired by Keep a Changelog.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-04-23
+
+### Fixed
+
+- Prioritized East Asian Windows code pages before locale fallbacks so localized command output does not decode as mojibake on some Windows environments.
+
 ## [0.1.3] - 2026-04-23
 
 ### Fixed
@@ -48,7 +54,8 @@ The format is inspired by Keep a Changelog.
 - GitHub Actions CI and automated GitHub Release packaging.
 - English and Simplified Chinese documentation.
 
-[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/Kidder1/nic/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/Kidder1/nic/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/Kidder1/nic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Kidder1/nic/compare/v0.1.0...v0.1.1

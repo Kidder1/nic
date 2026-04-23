@@ -59,12 +59,16 @@ def decode_command_output(output: bytes, platform_name: Optional[str] = None) ->
 
     candidates.extend(["utf-8-sig", "utf-8"])
 
+    platform_key = detect_platform(platform_name)
+    if platform_key == "windows":
+        candidates.extend(["cp936", "gbk", "cp950", "big5", "cp932", "shift_jis", "cp949", "euc_kr"])
+
     preferred_encodings = [
         locale.getpreferredencoding(False),
         getattr(locale, "getencoding", lambda: "")(),
     ]
-    if detect_platform(platform_name) == "windows":
-        preferred_encodings.extend(["mbcs", "oem", "cp936", "gbk", "cp950", "big5"])
+    if platform_key == "windows":
+        preferred_encodings.extend(["mbcs", "oem"])
 
     seen: set[str] = set()
     for encoding in preferred_encodings:
