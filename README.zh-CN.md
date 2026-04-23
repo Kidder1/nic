@@ -2,6 +2,10 @@
 
 # nic
 
+[![Release](https://img.shields.io/github/v/release/Kidder1/nic)](https://github.com/Kidder1/nic/releases)
+[![CI](https://github.com/Kidder1/nic/actions/workflows/ci.yml/badge.svg)](https://github.com/Kidder1/nic/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/Kidder1/nic)](LICENSE)
+
 `nic` 是一个跨平台网络接口 CLI，用系统自带命令收集网卡信息，然后整理成适合快速查看的紧凑视图。
 
 默认输出只关注当前真正有意义的激活接口：物理网卡、虚拟机或虚拟网络接口、VPN 或隧道接口。只有在你明确需要时，才进入详细的逐接口信息展示。

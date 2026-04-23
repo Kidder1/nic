@@ -2,6 +2,10 @@ English | [中文](README.zh-CN.md)
 
 # nic
 
+[![Release](https://img.shields.io/github/v/release/Kidder1/nic)](https://github.com/Kidder1/nic/releases)
+[![CI](https://github.com/Kidder1/nic/actions/workflows/ci.yml/badge.svg)](https://github.com/Kidder1/nic/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/Kidder1/nic)](LICENSE)
+
 `nic` is a cross-platform CLI that turns native network tooling into a compact interface view you can scan quickly.
 
 It keeps the default output focused on the active interfaces that matter right now: physical adapters, VM or virtual networks, and VPN or tunnel interfaces. Detailed per-interface data is still available when you explicitly ask for it.
