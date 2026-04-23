@@ -44,6 +44,16 @@ python3 -m pip install .
 
 On Windows, use `python -m pip install .` if `python3` is not available.
 
+## Releases
+
+`nic` is a pure Python CLI, so the best release format is not per-platform binaries.
+Each GitHub release publishes:
+
+- a source tarball
+- a universal wheel: `py3-none-any.whl`
+
+The same wheel works on macOS, Linux, and Windows as long as the target machine has a supported Python version.
+
 ### Option 2: local launcher
 
 For macOS and Linux shells, you can install the repo launcher into `~/.local/bin`:

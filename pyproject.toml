@@ -10,8 +10,9 @@ readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [
-  { name = "kidder1" }
+  { name = "kidder1", email = "89340217+Kidder1@users.noreply.github.com" }
 ]
+urls = { Homepage = "https://github.com/Kidder1/nic", Repository = "https://github.com/Kidder1/nic" }
 keywords = ["network", "interfaces", "cli", "macos", "linux", "windows", "ethernet", "wifi"]
 classifiers = [
   "Environment :: Console",

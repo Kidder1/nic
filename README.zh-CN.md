@@ -48,6 +48,16 @@ python3 -m pip install .
 python -m pip install .
 ```
 
+## Release 打包方式
+
+`nic` 是纯 Python CLI，所以最合适的发布方式不是分别做三平台二进制。
+每个 GitHub Release 会发布：
+
+- 源码包
+- 通用 wheel：`py3-none-any.whl`
+
+也就是说，只要目标机器的 Python 版本受支持，同一个 wheel 就能在 macOS、Linux、Windows 上安装使用。
+
 ### 方式 2：本地启动脚本
 
 适用于 macOS 和 Linux shell：
