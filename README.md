@@ -79,6 +79,8 @@ Each GitHub release publishes:
 
 The same wheel works on macOS, Linux, and Windows as long as the target machine has a supported Python version.
 
+Version history is also tracked in [CHANGELOG.md](CHANGELOG.md).
+
 ### Option 3: local launcher
 
 For macOS and Linux shells, you can install the repo launcher into `~/.local/bin`:

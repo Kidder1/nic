@@ -83,6 +83,8 @@ python -m pip install .
 
 也就是说，只要目标机器的 Python 版本受支持，同一个 wheel 就能在 macOS、Linux、Windows 上安装使用。
 
+版本历史除了 Release 页面，也会同步记录在 [CHANGELOG.md](CHANGELOG.md)。
+
 ### 方式 3：本地启动脚本
 
 适用于 macOS 和 Linux shell：
