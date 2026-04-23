@@ -36,14 +36,33 @@ It keeps the default output focused on the active interfaces that matter right n
 
 ## Install
 
-Latest release:
+PyPI:
+
+- Package page: https://pypi.org/project/nic-cli/
+- Package name: `nic-cli`
+
+### Option 1: install from PyPI
+
+Recommended for normal users on macOS, Linux, and Windows.
+
+macOS / Linux:
+
+```bash
+python3 -m pip install --upgrade nic-cli
+```
+
+Windows:
+
+```powershell
+python -m pip install --upgrade nic-cli
+```
+
+### Option 2: install from GitHub Release
+
+Useful if you want to pin a specific wheel directly.
 
 - Release page: https://github.com/Kidder1/nic/releases/tag/v0.1.2
 - Wheel: `nic_cli-0.1.2-py3-none-any.whl`
-
-### Option 1: install from GitHub Release
-
-Recommended for normal users.
 
 macOS / Linux:
 
@@ -57,7 +76,7 @@ Windows:
 python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
-### Option 2: pip install from source
+### Option 3: pip install from source
 
 Works on macOS, Linux, and Windows.
 
@@ -81,7 +100,7 @@ The same wheel works on macOS, Linux, and Windows as long as the target machine 
 
 Version history is also tracked in [CHANGELOG.md](CHANGELOG.md).
 
-### Option 3: local launcher
+### Option 4: local launcher
 
 For macOS and Linux shells, you can install the repo launcher into `~/.local/bin`:
 

@@ -36,14 +36,33 @@
 
 ## 安装
 
-当前最新 release：
+PyPI：
+
+- 包页面：https://pypi.org/project/nic-cli/
+- 包名：`nic-cli`
+
+### 方式 1：直接从 PyPI 安装
+
+这是普通用户最推荐的安装方式，macOS、Linux、Windows 都能用。
+
+macOS / Linux：
+
+```bash
+python3 -m pip install --upgrade nic-cli
+```
+
+Windows：
+
+```powershell
+python -m pip install --upgrade nic-cli
+```
+
+### 方式 2：直接从 GitHub Release 安装
+
+适合你想固定某个具体 wheel 版本时使用。
 
 - Release 页面：https://github.com/Kidder1/nic/releases/tag/v0.1.2
 - Wheel：`nic_cli-0.1.2-py3-none-any.whl`
-
-### 方式 1：直接从 GitHub Release 安装
-
-普通用户推荐这种方式。
 
 macOS / Linux：
 
@@ -57,7 +76,7 @@ Windows：
 python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
-### 方式 2：从源码 pip 安装
+### 方式 3：从源码 pip 安装
 
 适用于 macOS、Linux、Windows。
 
@@ -85,7 +104,7 @@ python -m pip install .
 
 版本历史除了 Release 页面，也会同步记录在 [CHANGELOG.md](CHANGELOG.md)。
 
-### 方式 3：本地启动脚本
+### 方式 4：本地启动脚本
 
 适用于 macOS 和 Linux shell：
 
