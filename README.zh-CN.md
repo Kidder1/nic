@@ -32,7 +32,28 @@
 
 ## 安装
 
-### 方式 1：pip 安装
+当前最新 release：
+
+- Release 页面：https://github.com/Kidder1/nic/releases/tag/v0.1.1
+- Wheel：`nic_cli-0.1.1-py3-none-any.whl`
+
+### 方式 1：直接从 GitHub Release 安装
+
+普通用户推荐这种方式。
+
+macOS / Linux：
+
+```bash
+python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+```
+
+Windows：
+
+```powershell
+python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+```
+
+### 方式 2：从源码 pip 安装
 
 适用于 macOS、Linux、Windows。
 
@@ -58,7 +79,7 @@ python -m pip install .
 
 也就是说，只要目标机器的 Python 版本受支持，同一个 wheel 就能在 macOS、Linux、Windows 上安装使用。
 
-### 方式 2：本地启动脚本
+### 方式 3：本地启动脚本
 
 适用于 macOS 和 Linux shell：
 

@@ -32,7 +32,28 @@ It keeps the default output focused on the active interfaces that matter right n
 
 ## Install
 
-### Option 1: pip install
+Latest release:
+
+- Release page: https://github.com/Kidder1/nic/releases/tag/v0.1.1
+- Wheel: `nic_cli-0.1.1-py3-none-any.whl`
+
+### Option 1: install from GitHub Release
+
+Recommended for normal users.
+
+macOS / Linux:
+
+```bash
+python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+```
+
+Windows:
+
+```powershell
+python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+```
+
+### Option 2: pip install from source
 
 Works on macOS, Linux, and Windows.
 
@@ -54,7 +75,7 @@ Each GitHub release publishes:
 
 The same wheel works on macOS, Linux, and Windows as long as the target machine has a supported Python version.
 
-### Option 2: local launcher
+### Option 3: local launcher
 
 For macOS and Linux shells, you can install the repo launcher into `~/.local/bin`:
 
