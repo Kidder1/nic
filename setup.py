@@ -22,7 +22,6 @@ setup(
     author="kidder1",
     author_email="89340217+Kidder1@users.noreply.github.com",
     url="https://github.com/Kidder1/nic",
-    license="MIT",
     python_requires=">=3.9",
     package_dir={"": "src"},
     packages=find_packages(where="src"),

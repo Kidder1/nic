@@ -6,6 +6,11 @@ The format is inspired by Keep a Changelog.
 
 ## [Unreleased]
 
+### Changed
+
+- Added a GitHub Actions workflow for manual PyPI publishing via Trusted Publishing.
+- Simplified package license metadata to match current PyPI packaging expectations.
+
 ## [0.1.2] - 2026-04-23
 
 ### Fixed
