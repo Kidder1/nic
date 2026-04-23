@@ -8,6 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from nic.cli import build_parser
 from nic.cli import decode_command_output
+from nic.cli import display_width
 from nic.cli import derive_subnet
 from nic.cli import interface_details
 from nic.cli import normalize_netmask
@@ -27,6 +28,7 @@ from nic.cli import raw_command
 from nic.cli import render_detail
 from nic.cli import render_interface
 from nic.cli import render_summary
+from nic.cli import render_table
 from nic.cli import summary_group
 from nic.cli import summary_visible
 
@@ -337,6 +339,11 @@ def sample_data() -> dict:
 
 
 class CliParsingTests(unittest.TestCase):
+    def test_display_width_counts_cjk_as_wide(self):
+        self.assertEqual(display_width("IFACE"), 5)
+        self.assertEqual(display_width("以太网"), 6)
+        self.assertEqual(display_width("VMnet1"), 6)
+
     def test_normalize_netmask_from_hex(self):
         dotted, prefix = normalize_netmask("0xfffffe00")
         self.assertEqual(dotted, "255.255.254.0")
@@ -649,6 +656,53 @@ class CliParsingTests(unittest.TestCase):
         self.assertNotIn("Hidden        :", output)
         self.assertNotIn("awdl0", output)
         self.assertNotIn("utun5", output)
+
+    def test_render_table_aligns_cjk_values_with_headers(self):
+        output = render_table(
+            "Physical / Host",
+            [{"iface": "以太网", "type": "Ethernet", "ipv4": "192.168.5.12/24"}],
+            [("iface", "IFACE"), ("type", "TYPE"), ("ipv4", "IPv4")],
+        )
+        lines = output.splitlines()
+        self.assertEqual(
+            display_width(lines[1].split("TYPE")[0]),
+            display_width(lines[2].split("Ethernet")[0]),
+        )
+        self.assertEqual(
+            display_width(lines[1].split("IPv4")[0]),
+            display_width(lines[2].split("192.168.5.12/24")[0]),
+        )
+
+    def test_render_summary_aligns_cjk_interface_rows(self):
+        primary = sample_row(
+            "以太网",
+            "Ethernet",
+            "active",
+            "192.168.5.12/24",
+            "e0:be:03:97:aa:b4",
+            subnet="192.168.5.0/24",
+            primary=True,
+            gateway="192.168.5.1",
+            family="physical",
+        )
+        output = render_summary(
+            {
+                "default_route": {"gateway": "192.168.5.1", "interface": "以太网"},
+                "primary": primary,
+                "physical": [primary],
+                "system": [],
+                "tunnels": [],
+            }
+        )
+        lines = output.splitlines()
+        self.assertEqual(
+            display_width(lines[6].split("TYPE")[0]),
+            display_width(lines[7].split("Ethernet")[0]),
+        )
+        self.assertEqual(
+            display_width(lines[6].split("IPv4")[0]),
+            display_width(lines[7].split("192.168.5.12/24")[0]),
+        )
 
     def test_render_detail_keeps_verbose_interface_sections(self):
         output = render_detail(sample_data())

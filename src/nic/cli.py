@@ -13,6 +13,7 @@ import sys
 import tempfile
 import textwrap
 import time
+import unicodedata
 from pathlib import Path
 from typing import Optional
 
@@ -1028,23 +1029,39 @@ def collect(refresh: bool = False) -> dict[str, object]:
     return parse_collect_result({}, {}, {"gateway": "", "interface": ""})
 
 
+def display_width(value: object) -> int:
+    width = 0
+    for char in str(value):
+        if unicodedata.combining(char):
+            continue
+        if unicodedata.category(char) == "Cf":
+            continue
+        width += 2 if unicodedata.east_asian_width(char) in {"F", "W"} else 1
+    return width
+
+
+def pad_display(value: object, width: int) -> str:
+    text = str(value)
+    return text + (" " * max(width - display_width(text), 0))
+
+
 def render_table(title: str, rows: list[dict], columns: list[tuple[str, str]]) -> str:
     if not rows:
         return ""
 
     widths = []
     for key, label in columns:
-        width = len(label)
+        width = display_width(label)
         for row in rows:
-            width = max(width, len(str(row.get(key, ""))))
+            width = max(width, display_width(row.get(key, "")))
         widths.append(width)
 
     lines = [title]
-    lines.append("  " + "  ".join(label.ljust(widths[index]) for index, (_, label) in enumerate(columns)))
+    lines.append("  " + "  ".join(pad_display(label, widths[index]) for index, (_, label) in enumerate(columns)))
     for row in rows:
         lines.append(
             "  "
-            + "  ".join(str(row.get(key, "")).ljust(widths[index]) for index, (key, _) in enumerate(columns))
+            + "  ".join(pad_display(row.get(key, ""), widths[index]) for index, (key, _) in enumerate(columns))
         )
     return "\n".join(lines)
 
@@ -1053,10 +1070,10 @@ def render_pairs(title: str, pairs: list[tuple[str, str]]) -> str:
     if not pairs:
         return ""
 
-    width = max(len(label) for label, _ in pairs)
+    width = max(display_width(label) for label, _ in pairs)
     lines = [title]
     for label, value in pairs:
-        lines.append(f"  {label.ljust(width)}  {value}")
+        lines.append(f"  {pad_display(label, width)}  {value}")
     return "\n".join(lines)
 
 

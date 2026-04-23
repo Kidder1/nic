@@ -6,10 +6,16 @@ The format is inspired by Keep a Changelog.
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-04-23
+
+### Fixed
+
+- Corrected compact table alignment for CJK text in Windows terminals, including interface names like `以太网`.
+
 ### Changed
 
-- Added a GitHub Actions workflow for manual PyPI publishing via Trusted Publishing.
-- Simplified package license metadata to match current PyPI packaging expectations.
+- Rewrote the English and Simplified Chinese READMEs to emphasize the product's compact, cross-platform, active-only workflow.
+- Moved PyPI install guidance to the front of the documentation.
 
 ## [0.1.2] - 2026-04-23
 
@@ -42,7 +48,8 @@ The format is inspired by Keep a Changelog.
 - GitHub Actions CI and automated GitHub Release packaging.
 - English and Simplified Chinese documentation.
 
-[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/Kidder1/nic/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/Kidder1/nic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Kidder1/nic/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Kidder1/nic/releases/tag/v0.1.0
