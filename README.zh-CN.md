@@ -38,8 +38,8 @@
 
 当前最新 release：
 
-- Release 页面：https://github.com/Kidder1/nic/releases/tag/v0.1.1
-- Wheel：`nic_cli-0.1.1-py3-none-any.whl`
+- Release 页面：https://github.com/Kidder1/nic/releases/tag/v0.1.2
+- Wheel：`nic_cli-0.1.2-py3-none-any.whl`
 
 ### 方式 1：直接从 GitHub Release 安装
 
@@ -48,13 +48,13 @@
 macOS / Linux：
 
 ```bash
-python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
 Windows：
 
 ```powershell
-python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
 ### 方式 2：从源码 pip 安装

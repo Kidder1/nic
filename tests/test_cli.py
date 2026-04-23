@@ -7,6 +7,7 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from nic.cli import build_parser
+from nic.cli import decode_command_output
 from nic.cli import derive_subnet
 from nic.cli import interface_details
 from nic.cli import normalize_netmask
@@ -402,6 +403,14 @@ class CliParsingTests(unittest.TestCase):
         self.assertEqual(metadata["以太网"]["dns"], ["223.5.5.5", "119.29.29.29"])
         self.assertEqual(metadata["以太网"]["gateway"], "10.211.55.1")
         self.assertEqual(metadata["以太网"]["kind"], "Ethernet")
+
+    def test_decode_command_output_handles_localized_windows_gbk(self):
+        decoded = decode_command_output(WINDOWS_IPCONFIG_ZH_SAMPLE.encode("gbk"), platform_name="windows")
+        self.assertIn("以太网适配器 以太网:", decoded)
+        interfaces, metadata = parse_ipconfig_all(decoded)
+        self.assertIn("以太网", interfaces)
+        self.assertEqual(interfaces["以太网"]["ipv4"][0]["address"], "10.211.55.3")
+        self.assertEqual(metadata["以太网"]["gateway"], "10.211.55.1")
 
     def test_parse_route_print(self):
         route = parse_route_print(WINDOWS_ROUTE_PRINT_SAMPLE)

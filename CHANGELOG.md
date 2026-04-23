@@ -6,6 +6,13 @@ The format is inspired by Keep a Changelog.
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-23
+
+### Fixed
+
+- Decoded Windows command output with platform-aware codec fallbacks instead of assuming UTF-8.
+- Restored interface detection for localized Windows `ipconfig` and `route print` output, including Chinese systems.
+
 ## [0.1.1] - 2026-04-23
 
 ### Fixed
@@ -30,6 +37,7 @@ The format is inspired by Keep a Changelog.
 - GitHub Actions CI and automated GitHub Release packaging.
 - English and Simplified Chinese documentation.
 
-[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/Kidder1/nic/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Kidder1/nic/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Kidder1/nic/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Kidder1/nic/releases/tag/v0.1.0

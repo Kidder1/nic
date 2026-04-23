@@ -38,8 +38,8 @@ It keeps the default output focused on the active interfaces that matter right n
 
 Latest release:
 
-- Release page: https://github.com/Kidder1/nic/releases/tag/v0.1.1
-- Wheel: `nic_cli-0.1.1-py3-none-any.whl`
+- Release page: https://github.com/Kidder1/nic/releases/tag/v0.1.2
+- Wheel: `nic_cli-0.1.2-py3-none-any.whl`
 
 ### Option 1: install from GitHub Release
 
@@ -48,13 +48,13 @@ Recommended for normal users.
 macOS / Linux:
 
 ```bash
-python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+python3 -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
 Windows:
 
 ```powershell
-python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.1/nic_cli-0.1.1-py3-none-any.whl
+python -m pip install --upgrade https://github.com/Kidder1/nic/releases/download/v0.1.2/nic_cli-0.1.2-py3-none-any.whl
 ```
 
 ### Option 2: pip install from source

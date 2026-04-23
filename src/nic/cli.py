@@ -4,6 +4,7 @@ import argparse
 import csv
 import ipaddress
 import json
+import locale
 import os
 import re
 import shutil
@@ -47,17 +48,53 @@ WINDOWS_KEY_ALIASES = {
 }
 
 
+def decode_command_output(output: bytes, platform_name: Optional[str] = None) -> str:
+    if not output:
+        return ""
+
+    candidates: list[str] = []
+    if output.startswith((b"\xff\xfe", b"\xfe\xff")) or output[:4].count(b"\x00") >= 2:
+        candidates.extend(["utf-16", "utf-16le", "utf-16be"])
+
+    candidates.extend(["utf-8-sig", "utf-8"])
+
+    preferred_encodings = [
+        locale.getpreferredencoding(False),
+        getattr(locale, "getencoding", lambda: "")(),
+    ]
+    if detect_platform(platform_name) == "windows":
+        preferred_encodings.extend(["mbcs", "oem", "cp936", "gbk", "cp950", "big5"])
+
+    seen: set[str] = set()
+    for encoding in preferred_encodings:
+        normalized = str(encoding or "").strip()
+        if not normalized:
+            continue
+        key = normalized.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        candidates.append(normalized)
+
+    for encoding in candidates:
+        try:
+            return output.decode(encoding)
+        except Exception:
+            continue
+
+    return output.decode("utf-8", errors="ignore")
+
+
 def run(command: list[str]) -> str:
     try:
-        return subprocess.check_output(
+        output = subprocess.check_output(
             command,
-            text=True,
-            encoding="utf-8",
-            errors="ignore",
+            text=False,
             stderr=subprocess.DEVNULL,
         )
     except Exception:
         return ""
+    return decode_command_output(output)
 
 
 def run_passthrough(command: list[str]) -> int:
@@ -95,6 +132,8 @@ def read_cached(command: list[str], cache_path: Path, ttl: int, refresh: bool = 
 
 def detect_platform(value: Optional[str] = None) -> str:
     current = value or sys.platform
+    if current in {"macos", "linux", "windows"}:
+        return current
     if current.startswith("darwin"):
         return "macos"
     if current.startswith("linux"):
