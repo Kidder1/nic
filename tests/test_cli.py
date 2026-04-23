@@ -197,6 +197,23 @@ Tunnel adapter WSL:
 """
 
 
+WINDOWS_IPCONFIG_ZH_SAMPLE = """\
+Windows IP 配置
+
+以太网适配器 以太网:
+
+   连接特定的 DNS 后缀 . . . . . . . : localdomain
+   IPv6 地址 . . . . . . . . . . . . : fdb2:2c26:f4e4:0:6e9b:e175:ad3d:b177
+   临时 IPv6 地址. . . . . . . . . . : fdb2:2c26:f4e4:0:45f2:3589:43a3:a4d8
+   本地链接 IPv6 地址. . . . . . . . : fe80::96eb:b2f0:b82a:4749%15
+   IPv4 地址 . . . . . . . . . . . . : 10.211.55.3
+   子网掩码  . . . . . . . . . . . . : 255.255.255.0
+   默认网关. . . . . . . . . . . . . : 10.211.55.1
+   DNS 服务器  . . . . . . . . . . . : 223.5.5.5
+                                       119.29.29.29
+"""
+
+
 WINDOWS_ROUTE_PRINT_SAMPLE = """\
 ===========================================================================
 Interface List
@@ -209,6 +226,21 @@ Network Destination        Netmask          Gateway       Interface  Metric
           0.0.0.0          0.0.0.0       192.168.1.1    192.168.1.25     25
 Persistent Routes:
   None
+"""
+
+
+WINDOWS_ROUTE_PRINT_ZH_SAMPLE = """\
+===========================================================================
+接口列表
+ 15...00 50 56 c0 00 08 ......以太网
+===========================================================================
+IPv4 路由表
+===========================================================================
+活动路由:
+网络目标        网络掩码          网关       接口   跃点数
+          0.0.0.0          0.0.0.0       10.211.55.1     10.211.55.3     25
+永久路由:
+  无
 """
 
 
@@ -362,10 +394,24 @@ class CliParsingTests(unittest.TestCase):
         self.assertEqual(interfaces["Wi-Fi"]["status"], "inactive")
         self.assertEqual(metadata["WSL"]["kind"], "VM network")
 
+    def test_parse_ipconfig_all_extracts_localized_windows_interfaces(self):
+        interfaces, metadata = parse_ipconfig_all(WINDOWS_IPCONFIG_ZH_SAMPLE)
+        self.assertIn("以太网", interfaces)
+        self.assertEqual(interfaces["以太网"]["ipv4"][0]["address"], "10.211.55.3")
+        self.assertEqual(interfaces["以太网"]["ipv4"][0]["netmask"], "255.255.255.0")
+        self.assertEqual(metadata["以太网"]["dns"], ["223.5.5.5", "119.29.29.29"])
+        self.assertEqual(metadata["以太网"]["gateway"], "10.211.55.1")
+        self.assertEqual(metadata["以太网"]["kind"], "Ethernet")
+
     def test_parse_route_print(self):
         route = parse_route_print(WINDOWS_ROUTE_PRINT_SAMPLE)
         self.assertEqual(route["gateway"], "192.168.1.1")
         self.assertEqual(route["interface_ip"], "192.168.1.25")
+
+    def test_parse_route_print_localized(self):
+        route = parse_route_print(WINDOWS_ROUTE_PRINT_ZH_SAMPLE)
+        self.assertEqual(route["gateway"], "10.211.55.1")
+        self.assertEqual(route["interface_ip"], "10.211.55.3")
 
     def test_parse_getmac_csv(self):
         metadata = parse_getmac_csv(WINDOWS_GETMAC_SAMPLE)
@@ -411,6 +457,17 @@ class CliParsingTests(unittest.TestCase):
         ethernet = next(row for row in data["physical"] if row["iface"] == "Ethernet")
         self.assertEqual(ethernet["subnet"], "192.168.1.0/24")
         self.assertEqual(ethernet["dns"], ["1.1.1.1", "8.8.8.8"])
+
+    def test_parse_collect_result_windows_localized_maps_primary_and_summary_fields(self):
+        interfaces, metadata = parse_ipconfig_all(WINDOWS_IPCONFIG_ZH_SAMPLE)
+        route_info = parse_route_print(WINDOWS_ROUTE_PRINT_ZH_SAMPLE)
+        default_route = {"gateway": route_info["gateway"], "interface": "以太网"}
+        data = parse_collect_result(interfaces, metadata, default_route)
+        self.assertEqual(data["primary"]["iface"], "以太网")
+        ethernet = next(row for row in data["physical"] if row["iface"] == "以太网")
+        self.assertEqual(ethernet["subnet"], "10.211.55.0/24")
+        self.assertEqual(ethernet["gateway"], "10.211.55.1")
+        self.assertEqual(ethernet["type"], "Ethernet")
 
     def test_summary_visible_shows_vm_networks(self):
         self.assertTrue(

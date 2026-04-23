@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "nic-cli"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A clean, readable cross-platform network interface CLI for macOS, Linux, and Windows."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -35,3 +35,6 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+version = { attr = "nic.__version__" }

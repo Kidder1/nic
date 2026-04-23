@@ -20,6 +20,31 @@ from . import __version__
 
 SYSTEM_PROFILER_CACHE = Path(tempfile.gettempdir()) / "nic-system-profiler.json"
 SYSTEM_PROFILER_CACHE_TTL = 30
+WINDOWS_KEY_ALIASES = {
+    "description": "description",
+    "描述": "description",
+    "physicaladdress": "physicaladdress",
+    "物理地址": "physicaladdress",
+    "mediastate": "mediastate",
+    "媒体状态": "mediastate",
+    "ipv4address": "ipv4address",
+    "ipv4地址": "ipv4address",
+    "autoconfigurationipv4address": "autoconfigurationipv4address",
+    "自动配置ipv4地址": "autoconfigurationipv4address",
+    "subnetmask": "subnetmask",
+    "子网掩码": "subnetmask",
+    "ipv6address": "ipv6address",
+    "ipv6地址": "ipv6address",
+    "temporaryipv6address": "temporaryipv6address",
+    "临时ipv6地址": "temporaryipv6address",
+    "linklocalipv6address": "linklocalipv6address",
+    "本地链接ipv6地址": "linklocalipv6address",
+    "本地链路ipv6地址": "linklocalipv6address",
+    "defaultgateway": "defaultgateway",
+    "默认网关": "defaultgateway",
+    "dnsservers": "dnsservers",
+    "dns服务器": "dnsservers",
+}
 
 
 def run(command: list[str]) -> str:
@@ -98,7 +123,7 @@ def normalize_mac(value: str) -> str:
 
 
 def strip_annotations(value: str) -> str:
-    return re.sub(r"\s*\(.*?\)\s*", "", value).strip()
+    return re.sub(r"\s*[\(（].*?[\)）]\s*", "", value).strip()
 
 
 def strip_linux_alias(name: str) -> str:
@@ -391,7 +416,21 @@ def parse_linux_resolv_conf(output: str) -> list[str]:
 
 
 def normalize_windows_key(value: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "", value.lower())
+    compact = re.sub(r"[\s\.\:：·•。．]+", "", value.lower())
+    compact = re.sub(r"[^\w\u4e00-\u9fff]+", "", compact)
+    return WINDOWS_KEY_ALIASES.get(compact, re.sub(r"[^a-z0-9]+", "", compact))
+
+
+def extract_windows_interface_name(block_label: str) -> str:
+    match = re.search(r"adapter\s+(.+)$", block_label, re.IGNORECASE)
+    if match:
+        return match.group(1).strip()
+
+    match = re.search(r"适配器\s+(.+)$", block_label)
+    if match:
+        return match.group(1).strip()
+
+    return block_label.strip()
 
 
 def parse_windows_ipv6(value: str) -> dict[str, str]:
@@ -416,8 +455,7 @@ def parse_ipconfig_all(output: str) -> tuple[dict[str, dict], dict[str, dict]]:
         if line and not line.startswith(" "):
             if stripped.endswith(":") and "configuration" not in stripped.lower():
                 block_label = stripped[:-1]
-                match = re.search(r"adapter\s+(.+)$", block_label, re.IGNORECASE)
-                current_name = match.group(1) if match else block_label
+                current_name = extract_windows_interface_name(block_label)
                 current = {
                     "name": current_name,
                     "header": block_label,
@@ -523,22 +561,10 @@ def parse_ipconfig_all(output: str) -> tuple[dict[str, dict], dict[str, dict]]:
 
 def parse_route_print(output: str) -> dict[str, str]:
     best_route: Optional[dict[str, str]] = None
-    in_ipv4 = False
-    in_active_routes = False
 
     for raw_line in output.splitlines():
         stripped = raw_line.strip()
-        if stripped == "IPv4 Route Table":
-            in_ipv4 = True
-            continue
-        if not in_ipv4:
-            continue
-        if stripped == "Active Routes:":
-            in_active_routes = True
-            continue
-        if stripped == "Persistent Routes:":
-            break
-        if not in_active_routes or not stripped or stripped.startswith("Network Destination"):
+        if not stripped:
             continue
 
         fields = stripped.split()
@@ -631,21 +657,31 @@ def infer_kind(interface: str, item: Optional[dict] = None, label: str = "") -> 
         ("wlan", "wlp", "wlx")
     ):
         return "Wi-Fi"
+    if any(token in combined for token in ("无线局域网", "无线网络", "无线")):
+        return "Wi-Fi"
     if "bluetooth" in combined:
+        return "Bluetooth"
+    if "蓝牙" in combined:
         return "Bluetooth"
     if any(token in combined for token in ("hyper-v", "vmware", "virtualbox", "wsl")) or name.startswith(
         ("vmenet", "vmnet", "vboxnet")
     ):
         return "VM network"
+    if any(token in combined for token in ("虚拟", "hyper-v", "wsl")):
+        return "VM network"
     if name.startswith(("bridge", "br-", "virbr", "docker", "cni", "flannel", "lxcbr", "podman")):
+        return "Bridge"
+    if any(token in combined for token in ("桥接",)):
         return "Bridge"
     if name.startswith(("utun", "tun", "tap", "wg", "ppp", "tailscale", "zt", "isatap")) or any(
         token in combined for token in ("vpn", "wireguard", "tunnel", "tailscale", "zerotier")
     ):
         return "Tunnel/VPN"
+    if any(token in combined for token in ("隧道", "vpn")):
+        return "Tunnel/VPN"
     if name.startswith(("en", "eth", "eno", "ens", "enp", "em", "bond", "team", "ib", "wwan", "wwp")):
         return "Ethernet"
-    if any(token in combined for token in ("ethernet", "lan")):
+    if any(token in combined for token in ("ethernet", "lan", "以太网", "局域网")):
         return "Ethernet"
     return "System"
 
@@ -676,7 +712,10 @@ def infer_family(interface: str, interface_type: str, label: str = "") -> str:
 
     if interface_type in {"Wi-Fi", "Ethernet", "Bluetooth"} or name.startswith(
         ("en", "eth", "eno", "ens", "enp", "em", "wlan", "wlp", "wlx", "wwan", "wwp")
-    ) or any(token in combined for token in ("ethernet", "wifi", "wi-fi", "wireless", " lan", "bluetooth")):
+    ) or any(
+        token in combined
+        for token in ("ethernet", "wifi", "wi-fi", "wireless", " lan", "bluetooth", "以太网", "局域网", "无线", "蓝牙")
+    ):
         return "physical"
 
     return "system"
@@ -907,6 +946,19 @@ def collect_windows(refresh: bool = False) -> dict[str, object]:
         "gateway": route_info.get("gateway", ""),
         "interface": default_interface,
     }
+
+    if not default_interface:
+        gateway_candidates = [
+            name
+            for name, meta in metadata.items()
+            if meta.get("gateway") and interfaces.get(name, {}).get("ipv4")
+        ]
+        if gateway_candidates:
+            default_interface = gateway_candidates[0]
+            default_route = {
+                "gateway": metadata[default_interface].get("gateway", ""),
+                "interface": default_interface,
+            }
 
     if default_interface:
         metadata.setdefault(
